@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.zhb.dao.SuppliesDao">
+	<resultMap id="BaseResultMap" type="com.zl.zhb.pojo.Supplies">
+	<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="supplies_name" property="supplies_name" jdbcType="VARCHAR" />
+		<result column="size" property="size" jdbcType="DOUBLE" />
+		<result column="num" property="num" jdbcType="DOUBLE" />
+		<result column="prize" property="prize" jdbcType="DOUBLE" />
+		<result column="company_id" property="company_id" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,supplies_name, size, num, prize,company_id
+	</sql>
+	
+	<select id="findall" resultType="com.zl.zhb.pojo.Supplies">
+	    select id,supplies_name,size,quantity,prize,num,company_id,delect from supplies
+	</select>
+	
+	<!-- 根据分页数据start 和size查询数据 -->
+	<select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from supplies
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	
+	<!-- 查询用户记录总数 -->
+	<select id="selectCount" resultType="int">
+		select count(*) from supplies
+	</select>
+	
+	<!-- 通过name查询 -->
+	<select id="findbyname" resultType="com.zl.zhb.pojo.Supplies" parameterType="String">
+		select id,supplies_name,size,quantity,prize,num,company_id,delect from supplies where supplies_name=#{supplies_name}
+	</select>
+	
+	 <select id="checkbythreed" resultType="cn.sz.com.user.pojo.User" parameterType="cn.sz.com.user.pojo.User">
+    SELECT uid,supplies_name,size,quantity,prize,num,company_id,delect from supplies  FROM supplies
+    <where>
+    <if test="supplies_name!=null">
+        supplies_name=#{supplies_name}
+    </if>
+    <if test="start!=null">
+        and suplier&gt;#{start}
+    </if>
+    <if test="end!=null">
+        and procurer&lt;#{end}
+    </if>
+    </where>
+    order by supplies_name asc
+    </select>
+</mapper>
